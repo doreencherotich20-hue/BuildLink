@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "../../lib/supabase";
 
 export default function PostMaterials() {
   const [name, setName] = useState("");
@@ -15,6 +15,13 @@ export default function PostMaterials() {
   async function postMaterial(e: React.FormEvent) {
     e.preventDefault();
     setMessage("Posting material...");
+
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setMessage("Posting is unavailable because the site is not configured.");
+      return;
+    }
 
     const {
       data: { user },

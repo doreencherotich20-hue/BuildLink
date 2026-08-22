@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "../../lib/supabase";
 
 export default function RequestMaterials() {
   const [material, setMaterial] = useState("");
@@ -13,6 +13,13 @@ export default function RequestMaterials() {
   async function submitRequest(e: React.FormEvent) {
     e.preventDefault();
     setMessage("Submitting...");
+
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setMessage("Requests are unavailable because the site is not configured.");
+      return;
+    }
 
     const {
       data: { user },

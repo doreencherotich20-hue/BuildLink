@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "../../lib/supabase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,6 +11,13 @@ export default function Login() {
   async function login(e: React.FormEvent) {
     e.preventDefault();
     setMessage("Signing in...");
+
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setMessage("Login is unavailable because the site is not configured.");
+      return;
+    }
 
     const { error } = await supabase.auth.signInWithPassword({
       email,

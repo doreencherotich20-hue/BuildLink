@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "../../lib/supabase";
 
 type Material = {
   id: string;
@@ -18,12 +18,21 @@ export default function FindMaterials() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     loadMaterials();
   }, []);
 
   async function loadMaterials() {
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setMessage("Materials are unavailable because the site is not configured.");
+      setLoading(false);
+      return;
+    }
+
     const { data, error } = await supabase
       .from("materials")
       .select(
@@ -31,7 +40,9 @@ export default function FindMaterials() {
       )
       .order("created_at", { ascending: false });
 
-    if (!error && data) {
+    if (error) {
+      setMessage("Materials could not be loaded. Please try again later.");
+    } else if (data) {
       setMaterials(data);
     }
 
@@ -78,7 +89,9 @@ export default function FindMaterials() {
 
         {loading && <p>Loading materials...</p>}
 
-        {!loading && filteredMaterials.length === 0 && (
+        {message && <p>{message}</p>}
+
+        {!loading && !message && filteredMaterials.length === 0 && (
           <p>No materials found.</p>
         )}
 
