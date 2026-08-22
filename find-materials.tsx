@@ -1,89 +1,115 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-export default function RequestMaterials() {
-  const [material, setMaterial] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
-  const [message, setMessage] = useState("");
+type Material = {
+  id: string;
+  name: string;
+  category: string | null;
+  quantity: string | null;
+  location: string | null;
+  price: number | null;
+  currency: string;
+  description: string | null;
+};
 
-  async function submitRequest(e: React.FormEvent) {
-    e.preventDefault();
-    setMessage("Submitting...");
+export default function FindMaterials() {
+  const [materials, setMaterials] = useState<Material[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
-    const { error } = await supabase
-      .from("material_requests")
-      .insert({
-        material_name: material,
-        quantity: quantity,
-        location: location,
-        description: description,
-      });
+  useEffect(() => {
+    loadMaterials();
+  }, []);
 
-    if (error) {
-      setMessage("Something went wrong. Please try again.");
-      return;
+  async function loadMaterials() {
+    const { data, error } = await supabase
+      .from("materials")
+      .select(
+        "id, name, category, quantity, location, price, currency, description"
+      )
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setMaterials(data);
     }
 
-    setMessage("Your material request has been submitted!");
-    setMaterial("");
-    setQuantity("");
-    setLocation("");
-    setDescription("");
+    setLoading(false);
   }
+
+  const filteredMaterials = materials.filter((material) =>
+    material.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <main
       style={{
         fontFamily: "Arial",
         padding: "40px",
-        maxWidth: "700px",
+        maxWidth: "1100px",
         margin: "auto",
       }}
     >
-      <h1>Request Materials</h1>
+      <h1>Find Materials</h1>
 
-      <p>Tell BuildLink what construction materials you need.</p>
+      <p>
+        Find construction materials from suppliers, businesses and
+        individuals.
+      </p>
 
-      <form onSubmit={submitRequest}>
-        <label>Material needed</label>
-        <input
-          value={material}
-          onChange={(e) => setMaterial(e.target.value)}
-          placeholder="e.g. Cement"
-          required
-        />
+      <input
+        type="text"
+        placeholder="Search for materials..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          padding: "15px",
+          width: "100%",
+          maxWidth: "600px",
+          marginTop: "20px",
+          border: "1px solid #ccc",
+          borderRadius: "8px",
+        }}
+      />
 
-        <label>Quantity</label>
-        <input
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          placeholder="e.g. 50 bags"
-          required
-        />
+      <div style={{ marginTop: "35px" }}>
+        <h2>Available Materials</h2>
 
-        <label>Location</label>
-        <input
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          placeholder="e.g. Nairobi"
-          required
-        />
+        {loading && <p>Loading materials...</p>}
 
-        <label>Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe what you need"
-        />
+        {!loading && filteredMaterials.length === 0 && (
+          <p>No materials found.</p>
+        )}
 
-        <button type="submit">Submit Request</button>
-      </form>
+        {filteredMaterials.map((material) => (
+          <div
+            key={material.id}
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: "10px",
+              padding: "20px",
+              marginTop: "15px",
+            }}
+          >
+            <h3>{material.name}</h3>
 
-      {message && <p>{message}</p>}
+            {material.category && <p>Category: {material.category}</p>}
+
+            {material.quantity && <p>Quantity: {material.quantity}</p>}
+
+            {material.location && <p>Location: {material.location}</p>}
+
+            {material.price !== null && (
+              <p>
+                Price: {material.currency} {material.price}
+              </p>
+            )}
+
+            {material.description && <p>{material.description}</p>}
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
