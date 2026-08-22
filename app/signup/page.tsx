@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "../../lib/supabase";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -12,6 +12,13 @@ export default function Signup() {
   async function signup(e: React.FormEvent) {
     e.preventDefault();
     setMessage("Creating your account...");
+
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setMessage("Sign up is unavailable because the site is not configured.");
+      return;
+    }
 
     const { error } = await supabase.auth.signUp({
       email,
