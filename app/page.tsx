@@ -59,15 +59,4 @@ export default function MyRequestsPage() {
           >
             <h2>{request.material}</h2>
             <p>Quantity: {request.quantity}</p>
-            <p>Location: {request.location}</p>
-            <p>Details: {request.details}</p>
-            <p>Status: {request.status}</p>
-            <p>
-              Date: {new Date(request.created_at).toLocaleDateString()}
-            </p>
-          </div>
-        ))
-      )}
-    </main>
-  );
-}
+            <p>Loca
