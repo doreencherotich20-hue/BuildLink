@@ -1,99 +1,73 @@
-export default function Home() {
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabase";
+import { useRouter } from "next/navigation";
+
+type Request = {
+  id: string;
+  material: string;
+  quantity: string;
+  location: string;
+  details: string;
+  status: string;
+  created_at: string;
+};
+
+export default function MyRequestsPage() {
+  const router = useRouter();
+  const [requests, setRequests] = useState<Request[]>([]);
+
+  useEffect(() => {
+    async function getRequests() {
+      const { data: userData } = await supabase.auth.getUser();
+
+      if (!userData.user) {
+        router.push("/login");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("materials_requests")
+        .select("*")
+        .eq("user_id", userData.user.id)
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        setRequests(data);
+      }
+    }
+
+    getRequests();
+  }, [router]);
+
   return (
-    <main>
-      <header className="header">
-        <div className="logo">BuildLink</div>
+    <main style={{ maxWidth: "700px", margin: "60px auto", padding: "20px" }}>
+      <h1>My Material Requests</h1>
 
-        <nav>
-          <a href="#home">Home</a>
-          <a href="#materials">Find Materials</a>
-          <a href="#request">Request Materials</a>
-          <a href="#about">About</a>
-        </nav>
-      </header>
-
-      <section id="home" className="hero">
-        <div className="hero-content">
-          <p className="tagline">BUILD • CONNECT • GROW</p>
-
-          <h1>
-            Building materials,
-            <br />
-            <span>made easier.</span>
-          </h1>
-
-          <p className="description">
-            BuildLink connects builders, contractors, homeowners and suppliers
-            so you can find the materials you need and get your project moving.
-          </p>
-
-          <div className="buttons">
-            <a href="#materials" className="primary">
-              Find Materials
-            </a>
-
-            <a href="#request" className="secondary">
-              Request Materials
-            </a>
+      {requests.length === 0 ? (
+        <p>You have not submitted any requests yet.</p>
+      ) : (
+        requests.map((request) => (
+          <div
+            key={request.id}
+            style={{
+              border: "1px solid #ccc",
+              padding: "15px",
+              marginTop: "15px",
+            }}
+          >
+            <h2>{request.material}</h2>
+            <p>Quantity: {request.quantity}</p>
+            <p>Location: {request.location}</p>
+            <p>Details: {request.details}</p>
+            <p>Status: {request.status}</p>
+            <p>
+              Date: {new Date(request.created_at).toLocaleDateString()}
+            </p>
           </div>
-        </div>
-      </section>
-
-      <section id="materials" className="section">
-        <p className="tagline">EXPLORE</p>
-        <h2>Find the materials you need</h2>
-
-        <div className="cards">
-          <div className="card">
-            <h3>Cement</h3>
-            <p>Find cement suppliers near your project.</p>
-          </div>
-
-          <div className="card">
-            <h3>Steel</h3>
-            <p>Connect with suppliers for steel and reinforcement bars.</p>
-          </div>
-
-          <div className="card">
-            <h3>Sand & Ballast</h3>
-            <p>Find quality construction aggregates.</p>
-          </div>
-
-          <div className="card">
-            <h3>Bricks & Blocks</h3>
-            <p>Discover suppliers for building blocks and bricks.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="request" className="request">
-        <p className="tagline">NEED SOMETHING?</p>
-        <h2>Request building materials</h2>
-
-        <p>
-          Tell suppliers what you need, where you need it and how much you
-          need.
-        </p>
-
-        <a href="mailto:hello@buildlink.com" className="primary">
-          Make a Request
-        </a>
-      </section>
-
-      <section id="about" className="section about">
-        <p className="tagline">ABOUT BUILDLINK</p>
-        <h2>Connecting the construction community</h2>
-
-        <p>
-          BuildLink is designed to make it easier for people working on
-          construction projects to find materials and connect with suppliers.
-        </p>
-      </section>
-
-      <footer>
-        <strong>BuildLink</strong>
-        <p>Find materials. Connect with suppliers. Build better.</p>
-      </footer>
+        ))
+      )}
     </main>
   );
 }
