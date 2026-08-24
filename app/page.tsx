@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../lib/supabase";
 import { useRouter } from "next/navigation";
 
 type Request = {
@@ -14,7 +14,7 @@ type Request = {
   created_at: string;
 };
 
-export default function MyRequestsPage() {
+export default function HomePage() {
   const router = useRouter();
   const [requests, setRequests] = useState<Request[]>([]);
 
@@ -29,7 +29,7 @@ export default function MyRequestsPage() {
 
       const { data, error } = await supabase
         .from("materials_requests")
-        .select("id, material, quantity, location, details, status, created_at")
+        .select("*")
         .eq("user_id", userData.user.id)
         .order("created_at", { ascending: false });
 
@@ -43,21 +43,24 @@ export default function MyRequestsPage() {
 
   return (
     <main style={{ maxWidth: "700px", margin: "60px auto", padding: "20px" }}>
-      <h1>My Material Requests</h1>
+      <h1>Welcome to BuildLink</h1>
+
+      <button onClick={() => router.push("/request-materials")}>
+        Request Materials
+      </button>
+
+      <button onClick={() => router.push("/my-requests")}>
+        My Requests
+      </button>
+
+      <h2>Your Requests</h2>
 
       {requests.length === 0 ? (
-        <p>You have not submitted any requests yet.</p>
+        <p>No requests yet.</p>
       ) : (
         requests.map((request) => (
-          <div
-            key={request.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "15px",
-              marginTop: "15px",
-            }}
-          >
-            <h2>{request.material}</h2>
+          <div key={request.id}>
+            <h3>{request.material}</h3>
             <p>Quantity: {request.quantity}</p>
             <p>Location: {request.location}</p>
             <p>Details: {request.details}</p>
