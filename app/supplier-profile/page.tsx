@@ -1,84 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { useRouter } from "next/navigation";
 
-export default function SupplierProfilePage() {
+type Request = {
+  id: string;
+  material: string;
+  quantity: string;
+  location: string;
+  details: string;
+  status: string;
+  created_at: string;
+};
+
+export default function SupplierDashboardPage() {
   const router = useRouter();
+  const [requests, setRequests] = useState<Request[]>([]);
 
-  const [companyName, setCompanyName] = useState("");
-  const [contactName, setContactName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [location, setLocation] = useState("");
-  const [materials, setMaterials] = useState("");
+  useEffect(() => {
+    async function getRequests() {
+      const { data: userData } = await supabase.auth.getUser();
 
-  async function saveSupplier(e: React.FormEvent) {
-    e.preventDefault();
+      if (!userData.user) {
+        router.push("/login");
+        return;
+      }
 
-    const { data: userData } = await supabase.auth.getUser();
+      const { data, error } = await supabase
+        .from("materials_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (!userData.user) {
-      router.push("/login");
-      return;
+      if (!error && data) {
+        setRequests(data);
+      }
     }
 
-    const { error } = await supabase.from("suppliers").insert({
-      user_id: userData.user.id,
-      company_name: companyName,
-      contact_name: contactName,
-      phone,
-      location,
-      materials,
-    });
-
-    if (!error) {
-      alert("Supplier profile created successfully!");
-      router.push("/");
-    } else {
-      alert(error.message);
-    }
-  }
+    getRequests();
+  }, [router]);
 
   return (
-    <main style={{ maxWidth: "600px", margin: "50px auto", padding: "20px" }}>
-      <h1>Create Supplier Profile</h1>
+    <main style={{ maxWidth: "800px", margin: "50px auto", padding: "20px" }}>
+      <h1>Supplier Dashboard</h1>
 
-      <form onSubmit={saveSupplier}>
-        <input
-          placeholder="Company Name"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-        />
+      <p>Available material requests from customers:</p>
 
-        <input
-          placeholder="Contact Name"
-          value={contactName}
-          onChange={(e) => setContactName(e.target.value)}
-        />
-
-        <input
-          placeholder="Phone Number"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-
-        <input
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
-
-        <input
-          placeholder="Materials supplied (e.g. cement, sand)"
-          value={materials}
-          onChange={(e) => setMaterials(e.target.value)}
-        />
-
-        <button type="submit">
-          Save Supplier Profile
-        </button>
-      </form>
+      {requests.length === 0 ? (
+        <p>No requests available.</p>
+      ) : (
+        requests.map((request) => (
+          <div
+            key={request.id}
+            style={{
+              border: "1px solid #ccc",
+              padding: "15px",
+              marginTop: "15px",
+            }}
+          >
+            <h2>{request.material}</h2>
+            <p>Quantity: {request.quantity}</p>
+            <p>Location: {request.location}</p>
+            <p>Details: {request.details}</p>
+            <p>Status: {request.status || "Pending"}</p>
+          </div>
+        ))
+      )}
     </main>
   );
 }
