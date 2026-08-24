@@ -7,7 +7,7 @@ export default function Home() {
 
           <div>
             <p className="text-orange-400 font-semibold text-lg">
-              AI POWERED CONSTRUCTION NETWORK
+              BUILDLink Construction Network
             </p>
 
             <h1 className="text-6xl font-extrabold mt-4 leading-tight">
@@ -18,8 +18,8 @@ export default function Home() {
             </h1>
 
             <p className="mt-6 text-xl text-blue-100">
-              Connect construction companies with trusted suppliers,
-              materials, and opportunities through a smarter digital platform.
+              Connect with trusted suppliers, find construction materials,
+              and grow your projects through one smarter platform.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
@@ -41,26 +41,16 @@ export default function Home() {
             </div>
           </div>
 
+          <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-10 shadow-2xl border border-white/20">
 
-          <div className="relative">
+            <h2 className="text-3xl font-bold text-orange-300">
+              BuildLink Marketplace
+            </h2>
 
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-10 shadow-2xl border border-white/20">
-
-              <img
-                src="/buildlink-ai.png"
-                alt="BuildLink AI Construction"
-                className="rounded-2xl w-full h-96 object-cover"
-              />
-
-              <h2 className="text-3xl font-bold text-orange-300 mt-6">
-                Future Construction Hub
-              </h2>
-
-              <p className="mt-3 text-blue-100">
-                AI technology connecting suppliers, builders, and projects.
-              </p>
-
-            </div>
+            <p className="mt-4 text-blue-100">
+              Bringing builders, suppliers, and construction opportunities
+              together in one place.
+            </p>
 
           </div>
 
@@ -79,23 +69,21 @@ export default function Home() {
           </p>
         </div>
 
-
         <div className="bg-white text-blue-950 rounded-3xl p-8 shadow-xl">
           <h3 className="text-2xl font-bold">
             Smart Connections
           </h3>
           <p className="mt-3">
-            Save time by connecting the right people faster.
+            Save time by connecting with the right construction partners.
           </p>
         </div>
-
 
         <div className="bg-white text-blue-950 rounded-3xl p-8 shadow-xl">
           <h3 className="text-2xl font-bold">
             Build The Future
           </h3>
           <p className="mt-3">
-            A modern construction marketplace powered by technology.
+            A modern platform for construction growth and collaboration.
           </p>
         </div>
 
