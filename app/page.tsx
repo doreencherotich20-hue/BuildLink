@@ -1,147 +1,89 @@
 export default function Home() {
   return (
-    <main className="min-h-screen bg-orange-50">
-
-      <header className="bg-white shadow-md p-5">
-        <h1 className="text-3xl font-bold text-blue-700">
-          🏗️ BuildLink
-        </h1>
-      </header>
-
-
-      <section className="bg-gradient-to-r from-blue-700 to-orange-500 text-white p-10">
-
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+    <main className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-800 to-cyan-600 text-white">
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <div className="grid md:grid-cols-2 gap-10 items-center">
 
           <div>
-            <h2 className="text-4xl font-bold mb-5">
-              Build Smarter With BuildLink
-            </h2>
+            <h1 className="text-5xl font-bold leading-tight">
+              BuildLink
+              <span className="block text-orange-400">
+                Connecting Construction Faster
+              </span>
+            </h1>
 
-            <p className="mb-6 text-lg">
-              Find construction materials, connect with suppliers,
-              and manage your building needs easily.
+            <p className="mt-6 text-lg text-blue-100">
+              A smart platform connecting construction companies with trusted
+              suppliers, materials, and opportunities.
             </p>
 
-            <div className="flex gap-4">
-
+            <div className="mt-8 flex gap-4">
               <a
-                href="/materials"
-                className="bg-orange-500 px-6 py-3 rounded-full font-bold"
+                href="/supplier-profile"
+                className="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-xl font-semibold shadow-lg"
               >
-                Find Materials
+                Join as Supplier
               </a>
 
               <a
-                href="/request"
-                className="bg-white text-blue-700 px-6 py-3 rounded-full font-bold"
+                href="/materials-request"
+                className="bg-white text-blue-900 hover:bg-gray-100 px-6 py-3 rounded-xl font-semibold shadow-lg"
               >
                 Request Materials
               </a>
-
             </div>
           </div>
 
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl">
+            <div className="text-center">
+              <div className="text-8xl mb-6">
+                🏗️🤖
+              </div>
 
-          <div className="bg-white/20 rounded-3xl p-8 text-center">
+              <h2 className="text-3xl font-bold text-orange-300">
+                AI Construction Hub
+              </h2>
 
-            <div className="text-8xl">
-              🏗️
+              <p className="mt-4 text-blue-100">
+                Build smarter with technology connecting people, suppliers,
+                and construction projects.
+              </p>
             </div>
-
-            <h3 className="text-2xl font-bold mt-4">
-              Trusted Construction Network
-            </h3>
-
-            <p>
-              Connect customers, builders and suppliers.
-            </p>
-
           </div>
 
         </div>
-
       </section>
 
+      <section className="max-w-6xl mx-auto px-6 pb-20 grid md:grid-cols-3 gap-6">
 
-      <section className="p-10">
+        <div className="bg-white text-blue-900 rounded-2xl p-6 shadow-xl">
+          <h3 className="text-xl font-bold">
+            Trusted Suppliers
+          </h3>
+          <p className="mt-2">
+            Find reliable suppliers for your construction needs.
+          </p>
+        </div>
 
-        <h2 className="text-3xl font-bold text-blue-700 text-center mb-8">
-          Popular Materials
-        </h2>
+        <div className="bg-white text-blue-900 rounded-2xl p-6 shadow-xl">
+          <h3 className="text-xl font-bold">
+            Faster Connections
+          </h3>
+          <p className="mt-2">
+            Reduce time searching for materials and services.
+          </p>
+        </div>
 
-
-        <div className="grid md:grid-cols-3 gap-6">
-
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <div className="text-5xl">🧱</div>
-            <h3 className="font-bold text-xl">
-              Cement & Bricks
-            </h3>
-          </div>
-
-
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <div className="text-5xl">🔩</div>
-            <h3 className="font-bold text-xl">
-              Steel Materials
-            </h3>
-          </div>
-
-
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <div className="text-5xl">🏠</div>
-            <h3 className="font-bold text-xl">
-              Roofing Supplies
-            </h3>
-          </div>
-
+        <div className="bg-white text-blue-900 rounded-2xl p-6 shadow-xl">
+          <h3 className="text-xl font-bold">
+            Build The Future
+          </h3>
+          <p className="mt-2">
+            A modern construction marketplace powered by innovation.
+          </p>
         </div>
 
       </section>
-
-
-      <section className="bg-blue-700 text-white p-10 text-center">
-
-        <h2 className="text-3xl font-bold mb-8">
-          How BuildLink Works
-        </h2>
-
-
-        <div className="grid md:grid-cols-3 gap-6">
-
-          <div>
-            📦
-            <h3 className="font-bold">
-              Request Materials
-            </h3>
-          </div>
-
-
-          <div>
-            🤝
-            <h3 className="font-bold">
-              Connect Suppliers
-            </h3>
-          </div>
-
-
-          <div>
-            🚚
-            <h3 className="font-bold">
-              Receive Supplies
-            </h3>
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <footer className="bg-blue-900 text-white text-center p-5">
-        © 2026 BuildLink
-      </footer>
-
     </main>
   );
 }
