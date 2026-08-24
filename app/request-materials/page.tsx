@@ -1,76 +1,91 @@
 "use client";
 
 import { useState } from "react";
+import { supabase } from "../../lib/supabase";
+import { useRouter } from "next/navigation";
 
 export default function RequestMaterialsPage() {
+  const router = useRouter();
+
   const [material, setMaterial] = useState("");
   const [quantity, setQuantity] = useState("");
   const [location, setLocation] = useState("");
   const [details, setDetails] = useState("");
   const [message, setMessage] = useState("");
 
-  function submitRequest(e: React.FormEvent<HTMLFormElement>) {
+  async function submitRequest(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    setMessage("Your material request has been submitted.");
+    const { data } = await supabase.auth.getUser();
 
-    setMaterial("");
-    setQuantity("");
-    setLocation("");
-    setDetails("");
+    if (!data.user) {
+      router.push("/login");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("materials_requests")
+      .insert({
+        user_id: data.user.id,
+        material,
+        quantity,
+        location,
+        details,
+      });
+
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setMessage("Your material request has been submitted.");
+
+      setMaterial("");
+      setQuantity("");
+      setLocation("");
+      setDetails("");
+    }
   }
 
   return (
     <main style={{ maxWidth: "600px", margin: "60px auto", padding: "20px" }}>
       <h1>Request Materials</h1>
 
-      <p>
-        Tell suppliers what construction materials you need.
-      </p>
-
       <form onSubmit={submitRequest}>
-        <label>Material name</label>
         <input
-          type="text"
-          placeholder="Example: Cement"
+          placeholder="Material name"
           value={material}
           onChange={(e) => setMaterial(e.target.value)}
           required
-          style={{ width: "100%", padding: "12px", marginBottom: "15px" }}
         />
 
-        <label>Quantity</label>
+        <br /><br />
+
         <input
-          type="text"
-          placeholder="Example: 50 bags"
+          placeholder="Quantity"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
           required
-          style={{ width: "100%", padding: "12px", marginBottom: "15px" }}
         />
 
-        <label>Location</label>
+        <br /><br />
+
         <input
-          type="text"
-          placeholder="Your location"
+          placeholder="Location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           required
-          style={{ width: "100%", padding: "12px", marginBottom: "15px" }}
         />
 
-        <label>Additional details</label>
+        <br /><br />
+
         <textarea
-          placeholder="Add any details"
+          placeholder="Additional details"
           value={details}
           onChange={(e) => setDetails(e.target.value)}
-          style={{ width: "100%", padding: "12px", marginBottom: "15px" }}
         />
 
-        <button
-          type="submit"
-          style={{ width: "100%", padding: "12px" }}
-        >
+        <br /><br />
+
+        <button type="submit">
           Submit Request
         </button>
       </form>
