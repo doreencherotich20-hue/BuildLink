@@ -1,76 +1,78 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
-import { useRouter } from "next/navigation";
-
-type Request = {
-  id: string;
-  material: string;
-  quantity: string;
-  location: string;
-  details: string;
-  status: string;
-  created_at: string;
-};
-
-export default function HomePage() {
-  const router = useRouter();
-  const [requests, setRequests] = useState<Request[]>([]);
-
-  useEffect(() => {
-    async function getRequests() {
-      const { data: userData } = await supabase.auth.getUser();
-
-      if (!userData.user) {
-        router.push("/login");
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("materials_requests")
-        .select("*")
-        .eq("user_id", userData.user.id)
-        .order("created_at", { ascending: false });
-
-      if (!error && data) {
-        setRequests(data);
-      }
-    }
-
-    getRequests();
-  }, [router]);
-
+export default function Home() {
   return (
-    <main style={{ maxWidth: "700px", margin: "60px auto", padding: "20px" }}>
-      <h1>Welcome to BuildLink</h1>
+    <main className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm p-5 flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-blue-700">
+          BuildLink
+        </h1>
 
-      <button onClick={() => router.push("/request-materials")}>
-        Request Materials
-      </button>
+        <nav className="space-x-4 text-gray-700">
+          <a href="#" className="hover:text-blue-600">Home</a>
+          <a href="#" className="hover:text-blue-600">Find Materials</a>
+          <a href="#" className="hover:text-blue-600">Request Materials</a>
+          <a href="#" className="hover:text-blue-600">Suppliers</a>
+        </nav>
+      </header>
 
-      <button onClick={() => router.push("/my-requests")}>
-        My Requests
-      </button>
+      {/* Hero Section */}
+      <section className="bg-blue-700 text-white p-10 md:p-20 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold mb-5">
+          Connect Construction Needs With Trusted Suppliers
+        </h2>
 
-      <h2>Your Requests</h2>
+        <p className="text-lg mb-8">
+          BuildLink makes it easier to find building materials,
+          connect with suppliers, and manage requests in one place.
+        </p>
 
-      {requests.length === 0 ? (
-        <p>No requests yet.</p>
-      ) : (
-        requests.map((request) => (
-          <div key={request.id}>
-            <h3>{request.material}</h3>
-            <p>Quantity: {request.quantity}</p>
-            <p>Location: {request.location}</p>
-            <p>Details: {request.details}</p>
-            <p>Status: {request.status || "Pending"}</p>
-            <p>
-              Date: {new Date(request.created_at).toLocaleDateString()}
-            </p>
-          </div>
-        ))
-      )}
+        <div className="space-x-4">
+          <button className="bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold">
+            Find Materials
+          </button>
+
+          <button className="border border-white px-6 py-3 rounded-lg font-semibold">
+            Request Materials
+          </button>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="grid md:grid-cols-3 gap-6 p-10">
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="text-xl font-bold mb-3">
+            Find Suppliers
+          </h3>
+          <p>
+            Discover suppliers offering construction materials near you.
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="text-xl font-bold mb-3">
+            Request Materials
+          </h3>
+          <p>
+            Send your material needs and receive supplier responses.
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="text-xl font-bold mb-3">
+            Grow Your Business
+          </h3>
+          <p>
+            Suppliers can showcase products and connect with customers.
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white text-center p-5">
+        <p>
+          © 2026 BuildLink. Connecting construction businesses and customers.
+        </p>
+      </footer>
     </main>
   );
 }
